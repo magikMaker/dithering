@@ -6,7 +6,7 @@
   "author": "Bjørn Wikkeling <bjorn@wikkeling.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint ./public/js",
+    "lint": "eslint --fix ./public/js",
     "test": "yarn lint"
   },
   "devDependencies": {
