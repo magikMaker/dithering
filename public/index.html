@@ -8,12 +8,16 @@
         body,
         html {
             margin: 0;
-            min-height: 100%;
             padding: 0;
         }
 
         html > * {
             box-sizing: border-box;
+            height: 100%;
+        }
+
+        body {
+            min-height: 100%;
         }
 
         #canvas {
@@ -25,6 +29,6 @@
 </head>
 <body>
 <canvas id="canvas"></canvas>
-<scrip src="./js/main.js"></scrip>
+<script src="./js/main.js"></script>
 </body>
 </html>
