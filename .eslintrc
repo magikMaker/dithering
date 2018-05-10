@@ -4,13 +4,14 @@
             2,
             4
         ],
-        "quotes": [
-            2,
-            "single"
-        ],
         "linebreak-style": [
             2,
             "unix"
+        ],
+        "no-console": "off",
+        "quotes": [
+            2,
+            "single"
         ],
         "semi": [
             2,
@@ -18,8 +19,9 @@
         ]
     },
     "env": {
+        "browser": true,
         "es6": true,
-        "node": true
+        "node": false
     },
     "extends": "eslint:recommended"
 }
