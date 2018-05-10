@@ -1,0 +1,8 @@
+{
+  "name": "dithering",
+  "version": "0.0.0",
+  "main": "./src/index.html",
+  "repository": "ssh://git@bitbucket.wsrs.net:7999/mk/dithering.git",
+  "author": "Bjørn Wikkeling <bjorn@wikkeling.com>",
+  "license": "MIT"
+}
