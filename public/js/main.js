@@ -1,10 +1,12 @@
 // TODO make these in to UI controls:
-const IMAGE_URL = 'img/test-01.jpg';
+const IMAGE_URL = 'img/test-02.jpg';
 const STEPS = 1; // minimal 1
-const GREYSCALE = false;
+let GREY_SCALE = true;
 
 // handle to the canvas element
 const CANVAS = document.getElementById('canvas');
+// const FILE_INPUT = document.getElementById('file');
+// const GREY_SCALE_INPUT = document.getElementById('grey_scale');
 const HEIGHT = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 const WIDTH = window.innerWidth || document.documentElement.clientWdth || document.body.clientWidth;
 
@@ -37,7 +39,7 @@ class Colour {
      * @access public
      * @returns {Colour} the colour object so this method can be chained
      */
-    greyScale(){
+    greyScale() {
         const average = 0.3 * this.red + 0.59 * this.green + 0.11 * this.blue;
         this.red = average;
         this.green = average;
@@ -61,7 +63,7 @@ function setUpCanvas() {
  *
  * @returns {Promise}
  */
-async function loadImage() {
+async function loadImage(url) {
     const image = new Image();
 
     return new Promise((resolve, reject) => {
@@ -82,7 +84,8 @@ async function loadImage() {
             reject({error: 'error loading image'});
         };
 
-        image.src = IMAGE_URL;
+        image.src = url;
+        image.setAttribute('crossOrigin', '');
     });
 }
 
@@ -146,7 +149,7 @@ function getColourAtIndex(imageData, x, y) {
  * @param {number} y the y coordinate
  * @returns {void}
  */
-function setColourAtIndex(imageData, colour, x, y){
+function setColourAtIndex(imageData, colour, x, y) {
     const indices = getIndices(x, y, imageData.width);
     imageData.data[indices[0]] = colour.red;
     imageData.data[indices[1]] = colour.green;
@@ -219,10 +222,10 @@ function ditherImage(image) {
 
             distributeErrors(imageData, colourDifference, x, y);
 
-            if(GREYSCALE){
+            if(GREY_SCALE) {
                 ditheredColour.greyScale();
             }
-            setColourAtIndex(ditheredImageData, ditheredColour, x,  y);
+            setColourAtIndex(ditheredImageData, ditheredColour, x, y);
         }
     }
 
@@ -231,14 +234,68 @@ function ditherImage(image) {
 }
 
 /**
+ * Debounce a number of events to once every threshold milliseconds
+ *
+ * @param {Function} callback the function to call
+ * @param {number} [threshold] optional threshold period, default is 100ms
+ * @returns {Function} debounced function
+ */
+function debounce(callback, threshold = 100) {
+
+    let timeout;
+
+    return function debounced() {
+        const obj = this;
+        const args = arguments;
+
+        function delayed() {
+            callback.apply(obj, args);
+            timeout = null;
+        }
+
+        if(timeout) {
+            clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(delayed, threshold);
+    };
+
+}
+
+function changeGreyScale() {
+    console.log('change gs');
+}
+
+/**
+ *
+ * @param event
+ * @returns {Promise<void>}
+ */
+async function changeHandler(event) {
+    console.log('file changes', event.srcElement.value);
+
+    if(event.srcElement.value) {
+        const image = await loadImage(event.srcElement.value);
+        if(image && !image.error) {
+            ditherImage(image);
+        }
+        console.log('done...');
+
+    }
+}
+
+/**
  * Main app code
  */
 async function app() {
+    // const debouncedChangeHandler = debounce(changeHandler, 400);
+    // FILE_INPUT.addEventListener('keyup', debouncedChangeHandler);
+    // FILE_INPUT.addEventListener('mouseup', debouncedChangeHandler);
+    // GREY_SCALE_INPUT.addEventListener('change', changeGreyScale);
     setUpCanvas();
-    const image = await loadImage();
+    const image = await loadImage(IMAGE_URL);
     ditherImage(image);
     console.log('done...');
-
 }
 
 app();
